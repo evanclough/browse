@@ -1,12 +1,12 @@
 module Main where
 
-import Prelude hiding (lookup)
-import Data.Map 
+import Prelude
+import qualified Data.Map as Map
 import HaskellSay (haskellSay)
 import System.IO
 import System.Exit (exitSuccess)
 
-import Parser
+import HtmlParser
 
 help :: [String] -> IO ()
 help _ = putStrLn $ "help               | prints list of commands.\n" ++ 
@@ -22,8 +22,8 @@ parseLocal [fileName] = do  html <- readFile $ "html/" ++ fileName
 fetch :: [String] -> IO ()
 fetch args = putStrLn "hi"
 
-commandMap :: Map String ([String] -> IO ())
-commandMap = fromList [
+commandMap :: Map.Map String ([String] -> IO ())
+commandMap = Map.fromList [
     ("help", help), 
     ("exit", \lst -> exitSuccess),
     ("parseLocal", parseLocal),
@@ -34,7 +34,7 @@ parseInput :: String -> IO ()
 parseInput [] = putStrLn "You forgot to enter a command :("
 parseInput inp =    case isValidCmd of  Nothing -> putStrLn $ "invalid command: " ++ (head $ words inp)
                                         Just f -> f $ tail $ words inp
-                    where isValidCmd = lookup (head $ words inp) commandMap
+                    where isValidCmd = Map.lookup (head $ words inp) commandMap
 
 inputLoop :: IO ()
 inputLoop = do  putChar '>'
