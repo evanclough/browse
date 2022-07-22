@@ -2,20 +2,48 @@ module Main where
 
 import Prelude hiding (lookup)
 import Data.Map 
+import HaskellSay (haskellSay)
+import System.IO
+import System.Exit (exitSuccess)
+
+import Parser
 
 help :: [String] -> IO ()
-help _ = putStrLn "the commands are: "
+help _ = putStrLn $ "help               | prints list of commands.\n" ++ 
+                    "exit               | exits the program.\n" ++
+                    "parseLocal fileName| parses locally stored html, assuming the file you want to parse is in the html folder in the root directory. mostly for testing.\n" ++
+                    "fetch URL          | given some URL, parses the html into something that is hopefully readable.\n"
+
+parseLocal :: [String] -> IO ()
+parseLocal [fileName] = do  html <- readFile $ "html/" ++ fileName 
+                            putStrLn $ parseHtml html
+
+
+fetch :: [String] -> IO ()
+fetch args = putStrLn "hi"
 
 commandMap :: Map String ([String] -> IO ())
-commandMap = fromList [("help", help)]
+commandMap = fromList [
+    ("help", help), 
+    ("exit", \lst -> exitSuccess),
+    ("parseLocal", parseLocal),
+    ("fetch", fetch)
+    ]
 
 parseInput :: String -> IO ()
-parseInput inp = case isValidCmd of Nothing -> putStrLn $ "invalid command: " ++ (head $ words inp)
-                                    Just f -> f $ tail $ words inp
-                                    where isValidCmd = lookup (head $ words inp) commandMap
+parseInput [] = putStrLn "You forgot to enter a command :("
+parseInput inp =    case isValidCmd of  Nothing -> putStrLn $ "invalid command: " ++ (head $ words inp)
+                                        Just f -> f $ tail $ words inp
+                    where isValidCmd = lookup (head $ words inp) commandMap
+
+inputLoop :: IO ()
+inputLoop = do  putChar '>'
+                hFlush stdout
+                inp <- getLine
+                parseInput inp
+                inputLoop
 
 main :: IO ()
-main =  do
-            inp <- getLine
-            parseInput inp
-            main
+main =  do  haskellSay "Welcome to Browse! Enter 'help' for a list of commands!"
+            putStrLn "\n"
+            inputLoop
