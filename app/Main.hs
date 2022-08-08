@@ -5,6 +5,7 @@ import qualified Data.Map as Map
 import HaskellSay (haskellSay)
 import System.IO
 import System.Exit (exitSuccess)
+import System.Console.ANSI
 
 import HtmlParser
 
@@ -44,6 +45,9 @@ inputLoop = do  putChar '>'
                 inputLoop
 
 main :: IO ()
-main =  do  haskellSay "Welcome to Browse! Enter 'help' for a list of commands!"
+main =  do  setSGR  [   SetConsoleIntensity BoldIntensity,
+                        SetColor Foreground Vivid Red
+                        ]       
+            haskellSay "Welcome to Browse! Enter 'help' for a list of commands!"
             putStrLn "\n"
             inputLoop

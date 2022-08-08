@@ -13,17 +13,17 @@ version:            0.1.0.0
 
 -- The license under which the package is released.
 -- license:
-author:             Evan Clough
+author:             evanclough
 maintainer:         evanclough99@gmail.com
 
 -- A copyright notice.
 -- copyright:
 -- category:
-extra-source-files:
+extra-source-files: 
     CHANGELOG.md
     README.md
 
-executable browse
+executable testcabal
     main-is:          Main.hs
 
     -- Modules included in this executable, other than Main.
@@ -31,8 +31,9 @@ executable browse
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
-    build-depends:      base ^>=4.16.2.0,
+    build-depends:      base ^>=4.14.3.0,
                         containers,
-                        haskell-say ^>=1.0.0.0
+                        haskell-say ^>=1.0.0.0,
+                        ansi-terminal ^>=0.11.3
     hs-source-dirs:   app
     default-language: Haskell2010
